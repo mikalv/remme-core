@@ -45,33 +45,6 @@ services:
           -P dynamic
       "
 
-  validator:
-    image: hyperledger/sawtooth-validator:1.0
-    expose:
-      - 4004
-      - 8800
-    ports:
-      - '4004-4008:4004'
-      - '8800-8804:8800'
-    environment:
-      - GENESIS=true
-    volumes:
-      - ./remme/genesis/batch:/genesis/batch
-      - ./keys:/root/.sawtooth/keys
-    entrypoint: |
-      bash -c "
-        sawadm keygen && \
-        if [ ! -f /root/.sawtooth/keys/key.priv ]; then
-          sawtooth keygen key
-        fi
-        sawtooth-validator -vv \
-          --endpoint tcp://validator:8800 \
-          --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800 \
-          --seeds tcp://validator_2:8801 \
-          -P dynamic
-      "
-
   remme-transaction-processor:
     image: remme/remme-core:latest
     entrypoint: python3 -m remme tcp://validator:4004
