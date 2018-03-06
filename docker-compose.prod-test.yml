@@ -22,7 +22,6 @@ services:
     image: hyperledger/sawtooth-validator:1.0
     expose:
       - 4004
-      - 8800
     ports:
       - '4004-4008:4004'
       - '8800-8804:8800'
