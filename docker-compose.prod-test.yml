@@ -24,7 +24,8 @@ services:
       - 4004
       - 8800
     ports:
-      - '4004-4006:4004'
+      - '4004-4008:4004'
+      - '8800-8804:8800'
     environment:
       - GENESIS=true
     volumes:
@@ -40,7 +41,7 @@ services:
           --endpoint tcp://validator:8800 \
           --bind component:tcp://eth0:4004 \
           --bind network:tcp://eth0:8800 \
-          --seeds tcp://validator1:8800
+          --seeds tcp://validator1:8801
           -P dynamic
       "
 
