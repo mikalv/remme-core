@@ -32,17 +32,16 @@ services:
     entrypoint: |
       bash -c "
         sawadm keygen && \
-        sawtooth keygen key
-        if [ -d "/var/lib/sawtooth" ]; then
-          rm /var/lib/sawtooth/*
-        fi
+        sawtooth keygen key && \
         sawset genesis -k /root/.sawtooth/keys/key.priv && \
         sawadm genesis config-genesis.batch /genesis/batch/token-proposal.batch && \
 
         sawtooth-validator -vv \
           --endpoint tcp://validator:8800 \
           --bind component:tcp://eth0:4004 \
-          --bind network:tcp://eth0:8800
+          --bind network:tcp://eth0:8800 \
+          -P dynamic \
+          --scheduler parallel
       "
 
   remme-transaction-processor:

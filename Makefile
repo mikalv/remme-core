@@ -17,7 +17,10 @@ PROTO_SRC_DIR = ./protos
 PROTO_DST_DIR = ./remme/protos
 
 run:
-	docker-compose up
+	docker-compose -f docker-compose.prod.yml up
+
+run_prod_test:
+	docker-compose -f docker-compose.prod-test.yml up --scale validator=2
 
 run_dev:
 	docker-compose -f docker-compose.dev.yml up
