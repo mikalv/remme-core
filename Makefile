@@ -20,13 +20,13 @@ run:
 	docker-compose -f docker-compose.prod.yml up
 
 run_prod_test:
-	docker-compose -f docker-compose.prod-test.yml up --scale validator=2
+	docker-compose -f docker-compose.prod-test.yml up
 
 run_dev:
 	docker-compose -f docker-compose.dev.yml up
 
 shell:
-	docker exec -it $(shell docker-compose ps -q shell) bash
+	docker exec -it $(shell docker ps -f name=shell -q) bash
 
 test:
 	docker-compose -f docker-compose.test.yml up --abort-on-container-exit

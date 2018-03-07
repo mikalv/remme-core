@@ -24,8 +24,6 @@ services:
       - 4004
     ports:
       - '4020:4004'
-    environment:
-      - GENESIS=true
     volumes:
       - ./remme/genesis/batch:/genesis/batch
       - ./keys:/root/.sawtooth/keys
@@ -48,12 +46,6 @@ services:
     image: remme/remme-core:latest
     entrypoint: python3 -m remme tcp://validator:4004
 
-  settings-tp:
-    image: hyperledger/sawtooth-settings-tp:1.0
-    depends_on:
-      - validator
-    entrypoint: settings-tp -vv -C tcp://validator:4004
-
   rest-api:
     image: hyperledger/sawtooth-rest-api:1.0
     expose:
@@ -64,7 +56,7 @@ services:
       - validator
     entrypoint: |
       sawtooth-rest-api -vv
-        --connect tcp://validator:4004
+        --connect tcp://validator1:4004
         --bind rest-api:8008
 
   shell:

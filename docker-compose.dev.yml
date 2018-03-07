@@ -24,8 +24,6 @@ services:
       - 4004
     ports:
       - '4020:4004'
-    environment:
-      - GENESIS=true
     volumes:
       - ./remme/genesis/batch:/genesis/batch
       - ./keys:/root/.sawtooth/keys
@@ -54,12 +52,6 @@ services:
         pip3 install --upgrade /root/remme && \
         python3 -m remme tcp://validator:4004
       "
-
-  settings-tp:
-    image: hyperledger/sawtooth-settings-tp:1.0
-    depends_on:
-      - validator
-    entrypoint: settings-tp -vv -C tcp://validator:4004
 
   rest-api:
     image: hyperledger/sawtooth-rest-api:1.0
