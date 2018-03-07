@@ -32,6 +32,9 @@ services:
         if [ ! -f /root/.sawtooth/keys/key.priv ]; then
           sawtooth keygen key
         fi
+        if [ ! -f /var/lib/sawtooth/block-00.lmdb ]; then
+          rm /var/lib/sawtooth/block-00.lmdb
+        fi
         sawadm genesis /genesis/batch/token-proposal.batch && \
         sawtooth-validator -vv \
           --endpoint tcp://validator1:8800 \
