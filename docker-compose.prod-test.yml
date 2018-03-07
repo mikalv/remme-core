@@ -34,10 +34,12 @@ services:
         fi
         sawadm genesis /genesis/batch/token-proposal.batch && \
         sawtooth-validator -vv \
-          --endpoint tcp://validator:8800 \
+          --endpoint tcp://validator1:8800 \
           --bind component:tcp://eth0:4004 \
           --bind network:tcp://eth0:8800 \
-          --peering dynamic
+          --peering dynamic \
+          --network-auth trust
+
       "
   validator2:
     image: hyperledger/sawtooth-validator:1.0
@@ -54,11 +56,12 @@ services:
           sawtooth keygen key
         fi
         sawtooth-validator -vv \
-          --endpoint tcp://validator:8800 \
+          --endpoint tcp://validator2:8800 \
           --bind component:tcp://eth0:4004 \
           --bind network:tcp://eth0:8800 \
           --seed tcp://validator1:8800 \
-          --peering dynamic
+          --peering dynamic \
+          --network-auth trust
       "
 
   remme-transaction-processor1:
@@ -76,10 +79,10 @@ services:
     ports:
       - '8022:8008'
     depends_on:
-      - validator1
+      - validator2
     entrypoint: |
       sawtooth-rest-api -vv
-        --connect tcp://validator:4004
+        --connect tcp://validator2:4004
         --bind rest-api:8008
 
   shell:
