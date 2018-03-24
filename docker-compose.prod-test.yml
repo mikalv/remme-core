@@ -75,6 +75,12 @@ services:
     image: remme/remme-core:latest
     entrypoint: python3 -m remme tcp://validator2:4004
 
+  settings-tp:
+    image: hyperledger/sawtooth-settings-tp:1.0
+    depends_on:
+      - validator
+    entrypoint: settings-tp -vv -C tcp://validator:4004
+
   rest-api:
     image: hyperledger/sawtooth-rest-api:1.0
     expose:

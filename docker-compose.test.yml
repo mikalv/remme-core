@@ -43,3 +43,5 @@ services:
         pip3 install --upgrade /root/remme && \
         python3 -m remme tcp://tests:4004
       "
+
+
