@@ -20,11 +20,11 @@ version: '2.1'
 services:
   validator:
     image: hyperledger/sawtooth-validator:1.0
+    env_file: docker.env
     expose:
       - 4004
     ports:
       - '${REMME_CURRENT_ENDPOINT_PORT}:${REMME_CURRENT_ENDPOINT_PORT}'
-    env_file: .env
     volumes:
       - ./remme/genesis/batch:/genesis/batch
       - ./keys:/root/.sawtooth/keys
@@ -32,6 +32,7 @@ services:
 
   remme-transaction-processor:
     image: remme/remme-core:latest
+    env_file: docker.env
     entrypoint: scripts/transaction-processor.sh
 
   settings-tp:

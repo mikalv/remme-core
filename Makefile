@@ -22,6 +22,9 @@ run:
 run_prod_test:
 	docker-compose -f docker-compose.prod-test.yml up
 
+run_prod:
+    docker-compose -f docker-compose.prod.yml up
+
 run_dev:
 	docker-compose -f docker-compose.dev.yml up
 

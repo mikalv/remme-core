@@ -9,5 +9,5 @@ sawtooth-validator -vv \
   --endpoint ${REMME_CURRENT_ENDPOINT_URL}:${REMME_CURRENT_ENDPOINT_PORT} \
   --bind component:tcp://eth0:${REMME_COMPONENT_PORT} \
   --bind network:tcp://eth0:${REMME_CURRENT_ENDPOINT_PORT} \
-  -P static \
+  -P static ${REMME_PEERS_LIST} \
   --scheduler parallel
