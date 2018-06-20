@@ -65,8 +65,6 @@ services:
       - 8008
     ports:
       - '${REMME_VALIDATOR_REST_API_PORT:-8008}:8008'
-#    depends_on:
-#     - validator
     command: sawtooth-rest-api -v --connect tcp://validator:4004 --bind validator-rest-api:8008
     stop_signal: SIGKILL
 

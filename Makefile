@@ -32,10 +32,6 @@ run_dev_no_genesis: build_docker
 run_dev: build_docker
 	docker-compose -f docker-compose/dev.yml -f docker-compose/genesis.yml -f docker-compose/run.yml up
 
-poet_enroll_validators_list:
-	docker exec -it $(shell docker-compose -f docker-compose/dev.yml ps -q validator) bash -c "poet registration \
-	create -k /etc/sawtooth/keys/validator.priv -o enroll_poet.batch && sawtooth batch submit -f enroll_poet.batch --url http://rest-api:8080"
-
 test: build_docker
 	docker-compose -f docker-compose/test.yml -f docker-compose/run-test.yml up --abort-on-container-exit
 
