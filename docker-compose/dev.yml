@@ -21,6 +21,7 @@ services:
     depends_on:
       - settings-tp
       - poet-validator-registry
+      - validator-rest-api
     volumes:
       - validator_keys:/etc/sawtooth/keys
       - chain_data:/var/lib/sawtooth/
@@ -42,6 +43,13 @@ services:
         if [ ! -z \"$$REMME_SEEDS_LIST\" ]; then
           ADDITIONAL_ARGS=\"$$ADDITIONAL_ARGS --seeds $$REMME_SEEDS_LIST\"
         fi
+        if [ \"$$REMME_CONSENSUS\" = \"poet-simulator\" ]; then
+          poet registration create -k /etc/sawtooth/keys/validator.priv \
+            --enclave-module simulator -o poet_registration.batch
+            sawtooth batch submit \
+              --url http://validator-rest-api:${REMME_VALIDATOR_REST_API_PORT:-8008} \
+              -f poet_registration.batch &
+        fi
         sawtooth-validator -vv \
           --endpoint tcp://$$REMME_VALIDATOR_IP:$$REMME_VALIDATOR_PORT \
           --bind component:tcp://eth0:4004 \
@@ -57,8 +65,8 @@ services:
       - 8008
     ports:
       - '${REMME_VALIDATOR_REST_API_PORT:-8008}:8008'
-    depends_on:
-     - validator
+#    depends_on:
+#     - validator
     command: sawtooth-rest-api -v --connect tcp://validator:4004 --bind validator-rest-api:8008
     stop_signal: SIGKILL
 
