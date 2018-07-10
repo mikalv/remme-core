@@ -1,11 +1,9 @@
 import json
 
-import zmq
 import logging
 import weakref
 import asyncio
 
-from remme.settings import ZMQ_URL
 from concurrent.futures import TimeoutError
 from sawtooth_sdk.protobuf.client_event_pb2 import ClientEventsSubscribeRequest
 from sawtooth_sdk.protobuf.validator_pb2 import Message
@@ -13,7 +11,6 @@ from sawtooth_sdk.protobuf.events_pb2 import EventList, EventSubscription
 from google.protobuf.json_format import MessageToJson
 from sawtooth_sdk.messaging.exceptions import ValidatorConnectionError
 
-from remme.shared.utils import generate_random_key
 from remme.ws.basic import BasicWebSocketHandler
 from remme.ws.constants import Entity
 
@@ -55,7 +52,7 @@ class WSEventSocketHandler(BasicWebSocketHandler):
             content=request)
 
         try:
-            resp = future.result().content
+            resp = future.result(3).content
         except ValidatorConnectionError as vce:
             LOGGER.error('Error: %s' % vce)
             raise Exception(
