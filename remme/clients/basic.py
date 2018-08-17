@@ -182,19 +182,26 @@ class BasicClient:
         return json.loads(result.text)
 
     def _socket_request(self, suffix, data=None):
+        LOGGER.info(f'_socket_request: {suffix}')
+
         if suffix == 'batches':
             return self.submit_batches({'batches': data.batches})
         elif 'batch_statuses?id=' in suffix:
             _, batch_id = suffix.split('?id=')
+            LOGGER.info(f'before get_batch_statuses')
+
             return self.get_batch_statuses({'batch_ids': [batch_id]})
         elif 'state/' in suffix:
             _, address = suffix.split('/')
             _, root = self.get_root_block()
+            LOGGER.info(f'get_root_block finished, before fetch_state')
+
             return self.fetch_state({'state_root': root, 'address': address})
         else:
             raise ClientException('Suffix "%s" not supported' % suffix)
 
     def _handle_response(self, msg_type, resp_proto, req):
+        LOGGER.info('_handle_response start')
         # Loops while NOT_READY
         while True:
             self._stream.wait_for_ready()
@@ -202,11 +209,13 @@ class BasicClient:
             future = self._stream.send(
                 message_type=msg_type,
                 content=req.SerializeToString())
+            LOGGER.info(f'_stream.send msg_type {msg_type}')
 
             resp = resp_proto()
 
             try:
                 resp.ParseFromString(future.result().content)
+                LOGGER.info(f'resp {resp}')
             except (DecodeError, AttributeError):
                 raise ClientException(
                     'Failed to parse "content" string from validator')
@@ -240,10 +249,13 @@ class BasicClient:
         return {'data': resp['peers']}
 
     def get_root_block(self):
+        LOGGER.info(f'get_root_block begins, before _handle_response')
+
         resp = self._handle_response(Message.CLIENT_BLOCK_LIST_REQUEST,
                                      ClientBlockListResponse,
                                      ClientBlockListRequest(
                                          paging=ClientPagingControls(limit=1)))
+        LOGGER.info(f'get_root_block: response {resp}')
 
         block = resp['blocks'][0]
         header = BlockHeader()
